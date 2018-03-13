@@ -7,12 +7,52 @@ var request = require("request");
 
 var keys = require("./keys");
 
-//ref
+// ref
 // generates a new spotify key
 var spotifyKey  = new Spotify(keys.spotify);
 
 //*******************************************************
-// twitter lookup
+// movie gang
+//*******************************************************
+var getMovie = function(movieName) {
+  if (movieName === undefined) {
+    movieName = "Mr Nobody";
+  }
+  var url = "http://www.omdbapi.com/?t=" + movieName + "&y=&plot=full&tomatoes=true&apikey=trilogy";
+  request(url, function(error, response, body) {
+    if (!error && response.statusCode === 200) {
+      var imdbData = JSON.parse(body);
+      console.log("Movie Title: " + imdbData.Title);
+      console.log("Movie Year: " + imdbData.Year);
+      console.log("IMDB Rating: " + imdbData.imdbRating);
+      console.log("Rotton Tomatoes Rating: " + imdbData.Ratings[1].Value);
+      console.log("Country Produced: " + imdbData.Country);
+      console.log("Language: " + imdbData.Language);
+      console.log("Movie Plot: " + imdbData.Plot);
+      console.log("Actors: " + imdbData.Actors);
+    }
+  });
+};
+
+//*******************************************************
+// read file function
+//*******************************************************
+var doWhatItSays = function() {
+  fs.readFile("random.txt", "utf8", function(error, data) {
+    console.log(data);
+
+    var dataArr = data.split(",");
+    if (dataArr.length === 2) {
+      pick(dataArr[0], dataArr[1]);
+    }
+    else if (dataArr.length === 1) {
+      pick(dataArr[0]);
+    }
+  });
+};
+
+//*******************************************************
+// tweet lookup
 //*******************************************************
 
 var getTweets = function() {
@@ -26,6 +66,8 @@ var getTweets = function() {
     if (!error) {
       for (var i = 0; i < tweets.length; i++) {
         console.log(tweets[i].text);
+        console.log("------")
+        
       }
     }
   });
@@ -38,7 +80,7 @@ var getTweets = function() {
 
 // get artist name
 var artistName = function(artist){
-	return artists.name;
+	return artist.name;
 };
 
 // get song info
@@ -63,11 +105,17 @@ if (songName === undefined) {
 var single = data.tracks.items;
 
 for (var i = 0; i < single.length; i++) {
-	//console.log(single[i].artistName);//artist
-	console.log(single[i].name);//track name
-	console.log(single[i].preview_url);//preview url
-	console.log(single[i].album);//album
-	console.log("------ END OF DETAILS FOR " + single[i].artistName + " ------");
+
+  console.log("Artist: " + single[i].artists.map(artistName));
+  console.log("Track Title: " + single[i].name);
+  console.log("Track Link: " + single[i].preview_url);
+  console.log("EP Title: " + single[i].album.name);  
+
+ //  console.log(single[i].artists.map(artistName));//artist
+	// //console.log(single[i].track.name);//track name
+	// console.log(single[i].spotify_url);//preview url
+	// console.log(single[i].album.name);//album
+	console.log("------ END OF DETAILS FOR " + single[i].artists.map(artistName) + " ------");
 	break;
       }
     }
@@ -82,8 +130,14 @@ var renderResults = function(resultData, functionData) {
     case "spotify-this-song":
       querySong(functionData);
       break;
+    case "movie-this":
+      getMovie(functionData);
+      break;
+    case "do-what-it-says":
+      doWhatItSays();
+      break;
     default:// no valid value
-      console.log("Try to enter another Twitter Handle. Twitter does not recognize the one you entered.");
+      console.log("Try to enter another entry.");
   }
 };
 

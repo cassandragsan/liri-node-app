@@ -19,6 +19,7 @@
   "homepage": "https://github.com/cassandragsan/liri-node-app#readme",
   "dependencies": {
     "dotenv": "^5.0.1",
+    "express": "^4.16.2",
     "node-spotify-api": "^1.0.7",
     "request": "^2.83.0",
     "twitter": "^1.7.1"
