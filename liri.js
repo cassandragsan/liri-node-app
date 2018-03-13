@@ -1,6 +1,7 @@
 require("dotenv").config();
 
 
+
 var Spotify = require("node-spotify-api");
 var Twitter = require("twitter");
 var request = require("request");
@@ -10,6 +11,9 @@ var keys = require("./keys");
 // ref
 // generates a new spotify key
 var spotifyKey  = new Spotify(keys.spotify);
+
+// readFile
+var fs = require("fs");
 
 //*******************************************************
 // movie gang
@@ -43,10 +47,10 @@ var doWhatItSays = function() {
 
     var dataArr = data.split(",");
     if (dataArr.length === 2) {
-      pick(dataArr[0], dataArr[1]);
+      renderResults(dataArr[0], dataArr[1]);
     }
     else if (dataArr.length === 1) {
-      pick(dataArr[0]);
+      renderResults(dataArr[0]);
     }
   });
 };
@@ -146,6 +150,11 @@ var renderResults = function(resultData, functionData) {
 //*******************************************************
 // Render data back based on input values in the console
 //*******************************************************
+var runReadFile = function(input1, input2) {
+  renderResults(input1, input2);
+};
+
+
 var runFeedData = function(input1, input2) {
   renderResults(input1, input2);
 };
